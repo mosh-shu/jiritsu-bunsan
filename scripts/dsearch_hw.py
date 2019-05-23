@@ -14,18 +14,21 @@ logging.basicConfig(level=logging.DEBUG, format='%(threadName)s: %(message)s')
 #
 # process body
 #
+
+
 def proc(id, card, n, resultq):
     find = 0
     logging.debug('start')
-         # 探すべきnがcard[]内にあるかをチェック
+    # 探すべきnがcard[]内にあるかをチェック
     for i in range(id*10, (id*10+10)):
         if (card[i] == n):
-           logging.debug(i)        
-           logging.debug('find!!!')        
-           find = 1
-           break
+            logging.debug(i)
+            logging.debug('find!!!')
+            find = 1
+            break
     resultq.put(find)
     logging.debug('endloop')
+
 
 #
 # main()
@@ -35,10 +38,10 @@ if __name__ == '__main__':
     # 100枚のcardを作成し、任意の整数（0..1000)を記入
     #
     card = [0 for i in range(100)]
-    print("card all 0 clear:",card)
-    for i in range (100):
-        card[i] = random.randint(1,1000)
-    print("card=",card)
+    print("card all 0 clear:", card)
+    for i in range(100):
+        card[i] = random.randint(1, 1000)
+    print("card=", card)
 
     #
     # 検索用の整数を入力
@@ -49,12 +52,12 @@ if __name__ == '__main__':
     #
     # 10個のスレッドと通信用Queueを生成、起動
     #　
-    threadlist = list()   
+    threadlist = list()
     resultq = queue.Queue()
     for i in range(10):
-       t = threading.Thread(target=proc, args=(i, card, num, resultq, ))
-       threadlist.append(t)
-       t.start()
+        t = threading.Thread(target=proc, args=(i, card, num, resultq, ))
+        threadlist.append(t)
+        t.start()
     #
     #　スレッドの終了を待ち、結果を印刷
     #
@@ -62,6 +65,6 @@ if __name__ == '__main__':
     for thread in threadlist:
         thread.join()
         if (resultq.get() == 1):
-           print("num=",num,"was found")
-           break
+            print("num=", num, "was found")
+            break
     print("All thread is ended.")
